@@ -6,10 +6,68 @@ import {
   Flame, 
   Tag 
 } from 'lucide-react'
+import useAuth from '../../hooks/useAuth';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { axiosSecure } from '../../hooks/useAxios';
 
 const FoodCart = ({ item, view = 'grid' }) => {
-    const { name, recipe, image, category, price } = item;
-  
+    const { name, recipe, image, category, price,_id } = item;
+    const {user}=useAuth()
+const navigate = useNavigate();
+
+
+    // add to cart function
+const handleAddToCart = (item) => {
+  if (user && user.email) {
+    const cartItem = {
+      menuId: _id,
+      email: user.email,
+      image,
+      price,
+      name
+    };
+
+    axiosSecure.post("/carts", cartItem)
+      .then(res => {
+        if (res.data.insertedId) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Added to Cart',
+            text: `${name} has been added to your cart!`,
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      })
+      .catch(err => {
+        console.error("Add to cart error:", err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops!',
+          text: 'Something went wrong. Please try again later.'
+        });
+      });
+
+  } else {
+    Swal.fire({
+      title: "Please Login",
+      text: "You need to log in to add items to your cart.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Login Now"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        navigate('/login'); // Redirect to login page
+      }
+    });
+  }
+};
+
+
     // Grid View
     if (view === 'grid') {
         return (
@@ -54,7 +112,7 @@ const FoodCart = ({ item, view = 'grid' }) => {
                     
                     {/* Permanent Add to Cart button */}
                     <div className="flex justify-between items-center mt-4">
-                        <button className="flex items-center bg-primary text-white hover:bg-primary-dark py-2 px-4 rounded-full text-sm font-medium transition duration-300">
+                        <button onClick={()=>handleAddToCart(item)} className="flex items-center bg-primary text-white hover:bg-primary-dark py-2 px-4 rounded-full text-sm font-medium transition duration-300">
                             <ShoppingCart className="w-4 h-4 mr-2" />
                             Add to Cart
                         </button>
@@ -102,7 +160,7 @@ const FoodCart = ({ item, view = 'grid' }) => {
                 
                 {/* Permanent Add to Cart button */}
                 <div className="flex justify-between items-center">
-                    <button className="flex items-center bg-primary text-white hover:bg-primary-dark py-3 px-6 rounded-full text-base font-medium transition duration-300">
+                    <button onClick={()=>handleAddToCart(item)}  className="flex items-center bg-primary text-white hover:bg-primary-dark py-3 px-6 rounded-full text-base font-medium transition duration-300">
                         <ShoppingCart className="w-5 h-5 mr-2" />
                         Add to Cart
                     </button>

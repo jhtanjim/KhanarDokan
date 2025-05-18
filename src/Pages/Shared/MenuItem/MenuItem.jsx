@@ -2,7 +2,7 @@ import React from 'react';
 
 const MenuItem = ({ item }) => {
   const { name, recipe, image, category, price } = item;
-  
+ 
   return (
     <div className="relative  mx-auto bg-white rounded-lg overflow-hidden shadow-lg transform transition duration-300 hover:scale-105">
       {/* Badge for popular item */}
