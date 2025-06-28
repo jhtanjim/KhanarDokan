@@ -13,7 +13,8 @@ import {
     Bell, 
     Settings, 
     HelpCircle, 
-    LogOut 
+    LogOut, 
+    UserCheck
 } from 'lucide-react';
 import { AuthContext } from '../../../Provider/AuthProvider';
 
@@ -36,6 +37,11 @@ console.log(user)
             path: '/menu',
             icon: <BookOpen className="w-5 h-5" />,
             label: 'Our Menu',
+        },
+        {
+            path: '/dashboard/allUsers',
+            icon: <UserCheck className="w-5 h-5" />,
+            label: 'All Users',
         },
         {
             path: '/dashboard/profile',

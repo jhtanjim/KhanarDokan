@@ -17,6 +17,7 @@ import PaymentMethods from "../Pages/DashBoard/PaymentMethods";
 import Notifications from "../Pages/DashBoard/Notifications";
 import Settings from "../Pages/DashBoard/Settings";
 import Support from "../Pages/DashBoard/Support";
+import AllUsers from "../Pages/DashBoard/AllUsers";
 
 
 export const router = createBrowserRouter([
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
             {
                 path: "/dashboard/profile",
                 element: <UserProfile/>
+            },
+            {
+                path: "/dashboard/allUsers",
+                element: <AllUsers/>
             },
             {
                 path: "/dashboard/cart",
