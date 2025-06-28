@@ -10,17 +10,19 @@ import useAuth from '../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { axiosSecure } from '../../hooks/useAxios';
+import useAxios from '../../hooks/useAxios';
 
 const FoodCart = ({ item, view = 'grid' }) => {
     const { name, recipe, image, category, price,_id } = item;
     const {user}=useAuth()
+    const axiosSecure=useAxios()
 const navigate = useNavigate();
 
 
     // add to cart function
 const handleAddToCart = (item) => {
   if (user && user.email) {
+    // if user exist
     const cartItem = {
       menuId: _id,
       email: user.email,
@@ -28,7 +30,7 @@ const handleAddToCart = (item) => {
       price,
       name
     };
-
+console.log(item)
     axiosSecure.post("/carts", cartItem)
       .then(res => {
         if (res.data.insertedId) {

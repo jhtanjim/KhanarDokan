@@ -6,11 +6,13 @@ import { PiShoppingCartThin } from 'react-icons/pi';
 import { MdMenu, MdClose } from 'react-icons/md';
 import { AuthContext } from '../../Provider/AuthProvider';
 import { navBarMenu } from '../../../public/MocData/navdata.js';
+import useCart from '../../hooks/useCart.jsx';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logOut } = useContext(AuthContext);
   const location = useLocation();
+const [cart]=useCart()
 
   const handleLogout = () => {
     logOut().catch(console.error);
@@ -54,8 +56,16 @@ const Navbar = () => {
         {/* Right Icons / Auth */}
         <div className="flex items-center gap-2">
           <IconBtn icon={<CiSearch />} />
-          <IconBtn icon={<PiShoppingCartThin />} />
-
+          <Link to={"/dashBoard"}>
+<div className="relative">
+  <IconBtn icon={<PiShoppingCartThin />} />
+  {cart.length > 0 && (
+    <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+      {cart.length}
+    </span>
+  )}
+</div>
+</Link>
           {user ? (
             <div className="flex items-center gap-2">
               <img
