@@ -1,13 +1,16 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 import useCart from '../../hooks/useCart';
 import { Trash } from 'lucide-react';
 import Swal from 'sweetalert2';
 import useAxios from '../../hooks/useAxios';
+import { AuthContext } from '../../Provider/AuthProvider';
 
 const Cart = () => {
     const [cart,refetch] = useCart();
     console.log(cart);
+  const { user, logOut } = useContext(AuthContext);
+
 const axiosSecure=useAxios()
     const totalPrice = cart.reduce((total, item) => total + item.price, 0);
 
@@ -15,6 +18,32 @@ const axiosSecure=useAxios()
         console.log('Processing payment for total:', totalPrice);
         alert(`Processing payment of $${totalPrice.toFixed(2)}`);
     };
+
+    const handleDeleteAll = () => {
+        if (cart.length === 0) return;
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This will delete all items in your cart!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete all!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axiosSecure.delete(`/carts?email=${user.email}`)
+                    .then(res => {
+                        if (res.data.deletedCount > 0) {
+                            refetch();
+                            Swal.fire("Deleted!", "All items have been removed from your cart.", "success");
+                        }
+                    });
+            }
+        });
+    };
+
+
 const handleDelete=(id)=>{
     Swal.fire({
   title: "Are you sure?",
@@ -71,6 +100,14 @@ const handleDelete=(id)=>{
                                 </svg>
                                 Pay Now - ${totalPrice.toFixed(2)}
                             </button>
+                            <button
+    onClick={handleDeleteAll}
+    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 shadow"
+>
+    <Trash className="w-4 h-4 mr-1" />
+    Delete All
+</button>
+
                         </div>
                     </div>
                 </div>

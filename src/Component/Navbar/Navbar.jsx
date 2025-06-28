@@ -56,7 +56,7 @@ const [cart]=useCart()
         {/* Right Icons / Auth */}
         <div className="flex items-center gap-2">
           <IconBtn icon={<CiSearch />} />
-          <Link to={"/dashBoard"}>
+          <Link to={"/dashBoard/cart"}>
 <div className="relative">
   <IconBtn icon={<PiShoppingCartThin />} />
   {cart.length > 0 && (
