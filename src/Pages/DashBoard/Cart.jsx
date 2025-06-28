@@ -1,10 +1,46 @@
+
 import React from 'react';
 import useCart from '../../hooks/useCart';
+import { Trash } from 'lucide-react';
+import Swal from 'sweetalert2';
+import useAxios from '../../hooks/useAxios';
 
 const Cart = () => {
-    const [cart] = useCart();
+    const [cart,refetch] = useCart();
     console.log(cart);
+const axiosSecure=useAxios()
+    const totalPrice = cart.reduce((total, item) => total + item.price, 0);
 
+    const handlePayment = () => {
+        console.log('Processing payment for total:', totalPrice);
+        alert(`Processing payment of $${totalPrice.toFixed(2)}`);
+    };
+const handleDelete=(id)=>{
+    Swal.fire({
+  title: "Are you sure?",
+  text: "You won't be able to revert this!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes, delete it!"
+}).then((result) => {
+  if (result.isConfirmed) {
+    axiosSecure.delete(`/carts/${id}`)
+    .then(res=>{
+        if(res.data.deletedCount>0){
+            refetch()
+   Swal.fire({
+      title: "Deleted!",
+      text: "Your file has been deleted.",
+      icon: "success"
+    });
+        }
+    })
+ 
+  }
+});
+}
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -15,6 +51,30 @@ const Cart = () => {
                     </p>
                 </div>
 
+                <div className="bg-gray-50 px-6 py-6 border-t">
+                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="text-sm text-gray-600">
+                            Total Items: <span className="font-semibold">{cart.length}</span>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                            <div className="text-2xl font-bold text-gray-900">
+                                Total: <span className="text-green-600">${totalPrice.toFixed(2)}</span>
+                            </div>
+
+                            <button
+                                onClick={handlePayment}
+                                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                            >
+                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                </svg>
+                                Pay Now - ${totalPrice.toFixed(2)}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 {cart.length === 0 ? (
                     <div className="text-center py-12">
                         <div className="text-gray-400 text-6xl mb-4">🛒</div>
@@ -22,88 +82,62 @@ const Cart = () => {
                         <p className="text-gray-500">Add some delicious items to get started!</p>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead className="bg-gray-50 border-b">
-                                <tr>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Item
-                                    </th>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Name
-                                    </th>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Price
-                                    </th>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Email
-                                    </th>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Action
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {cart.map((item, index) => (
-                                    <tr key={item._id} className="hover:bg-gray-50 transition-colors duration-200">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="flex-shrink-0 h-16 w-16">
-                                                <img 
-                                                    className="h-16 w-16 rounded-lg object-cover shadow-sm" 
-                                                    src={item.image} 
-                                                    alt={item.name}
-                                                    onError={(e) => {
-                                                        e.target.src = 'https://via.placeholder.com/64x64?text=No+Image';
-                                                    }}
-                                                />
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="text-sm font-medium text-gray-900">{item.name}</div>
-                                            <div className="text-sm text-gray-500">ID: {item.menuId}</div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-lg font-semibold text-green-600">
-                                                ${item.price.toFixed(2)}
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-700">{item.email}</div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <button 
-                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
-                                                onClick={() => {
-                                                    // Handle delete functionality here later
-                                                    console.log('Delete item:', item._id);
-                                                }}
-                                            >
-                                                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                                </svg>
-                                                Delete
-                                            </button>
-                                        </td>
+                    <>
+                        <div className="overflow-x-auto">
+                            <table className="w-full">
+                                <thead className="bg-gray-50 border-b">
+                                    <tr>
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-
-                {cart.length > 0 && (
-                    <div className="bg-gray-50 px-6 py-4 border-t">
-                        <div className="flex justify-between items-center">
-                            <div className="text-sm text-gray-600">
-                                Total Items: <span className="font-semibold">{cart.length}</span>
-                            </div>
-                            <div className="text-lg font-bold text-gray-900">
-                                Total: <span className="text-green-600">
-                                    ${cart.reduce((total, item) => total + item.price, 0).toFixed(2)}
-                                </span>
-                            </div>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {cart.map((item) => (
+                                        <tr key={item._id} className="hover:bg-gray-50 transition-colors duration-200">
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="flex-shrink-0 h-16 w-16">
+                                                    <img
+                                                        className="h-16 w-16 rounded-lg object-cover shadow-sm"
+                                                        src={item.image}
+                                                        alt={item.name}
+                                                        onError={(e) => {
+                                                            if (e.currentTarget.src !== 'https://placehold.co/64x64?text=No+Image') {
+                                                                e.currentTarget.src = 'https://placehold.co/64x64?text=No+Image';
+                                                            }
+                                                        }}
+                                                    />
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="text-sm font-medium text-gray-900">{item.name}</div>
+                                                <div className="text-sm text-gray-500">ID: {item.menuId}</div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-lg font-semibold text-green-600">${item.price.toFixed(2)}</div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <div className="text-sm text-gray-700">{item.email}</div>
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <button
+                                                    className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
+                                                    onClick={() => {
+                                                        handleDelete(item._id)
+                                                    }}
+                                                >
+                                                <Trash/>
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
+                    </>
                 )}
             </div>
         </div>
