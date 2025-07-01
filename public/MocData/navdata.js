@@ -16,11 +16,16 @@ export const navBarMenu=[
     },
     {
         id:4,
+        title:"Reservation",
+        link:"/reservation"
+    },
+    {
+        id:5,
         title:"Our Menu",
         link:"/menu"
     },
     {
-        id:5,
+        id:6,
         title:"Our Shop",
         link:"/order"
     },

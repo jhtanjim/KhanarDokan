@@ -1,20 +1,25 @@
-import React, { useContext } from 'react'
-import { Navigate } from 'react-router-dom'
-import { AuthContext } from '../Provider/AuthProvider'
-import UniversalLoading from '../Component/UniversalLoadin/UniversalLoadin'
+// PrivateRoute.js - Basic authentication check
+import { Navigate, useLocation } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
-const PrivateRoutes = ({children}) => {
-    const {user,loading}=useContext(AuthContext)
+const PrivateRoute = ({ children }) => {
+    const { user, loading } = useAuth();
+    const location = useLocation();
 
-if(loading){
-    <UniversalLoading/>
-}
-    if (user){
-        return children
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+            </div>
+        );
     }
-  return (
-<Navigate to={"/login"}></Navigate>
-  )
-}
 
-export default PrivateRoutes
+    if (user) {
+        return children;
+    }
+
+    return <Navigate to="/login" state={{ from: location }} replace />;
+};
+
+export default PrivateRoute;
+
