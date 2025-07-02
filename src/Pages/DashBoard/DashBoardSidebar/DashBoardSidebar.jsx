@@ -12,6 +12,7 @@ import {
   Menu,
   Settings,
   ShoppingCart,
+  Table,
   User,
   UserCheck,
 } from "lucide-react";
@@ -55,7 +56,12 @@ const DashBoardSidebar = () => {
     {
       path: "/dashboard/allReservations",
       icon: <Calendar className="w-5 h-5" />,
-      label: "Reservations",
+      label: "All Reservations",
+    },
+    {
+      path: "/dashboard/allOrders",
+      icon: <Calendar className="w-5 h-5" />,
+      label: "All Orders",
     },
     {
       path: "/dashboard/menuForm",
@@ -80,6 +86,11 @@ const DashBoardSidebar = () => {
       path: "/dashboard/orders",
       icon: <ClipboardList className="w-5 h-5" />,
       label: "Order History",
+    },
+    {
+      path: "/dashboard/reservations",
+      icon: <Table className="w-5 h-5" />,
+      label: "Reservations ",
     },
     {
       path: "/dashboard/favorites",

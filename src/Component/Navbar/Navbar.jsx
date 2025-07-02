@@ -1,12 +1,12 @@
-import React, { useContext, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { IoRestaurantOutline } from 'react-icons/io5';
+import { useContext, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
+import { IoRestaurantOutline } from 'react-icons/io5';
+import { MdClose, MdMenu } from 'react-icons/md';
 import { PiShoppingCartThin } from 'react-icons/pi';
-import { MdMenu, MdClose } from 'react-icons/md';
-import { AuthContext } from '../../Provider/AuthProvider';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { navBarMenu } from '../../../public/MocData/navdata.js';
 import useCart from '../../hooks/useCart.jsx';
+import { AuthContext } from '../../Provider/AuthProvider';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

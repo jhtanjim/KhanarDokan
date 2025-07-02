@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import DashBoardLayout from "../Layout/DashBoardLayout";
 import Main from "../Layout/Main";
 import Addresses from "../Pages/DashBoard/Addresses";
+import AdminOrders from "../Pages/DashBoard/AdminOrders";
 import AllReservation from "../Pages/DashBoard/AllReservation";
 import AllUsers from "../Pages/DashBoard/AllUsers";
 import Cart from "../Pages/DashBoard/Cart";
@@ -19,8 +20,9 @@ import Home from "../Pages/Home/Home/Home";
 import Login from "../Pages/Login/Login";
 import Menu from "../Pages/Menu/Menu";
 import Order from "../Pages/Order/Order/Order";
-import Reservation from "../Pages/Reservation/Reservation";
+import ReservationCreate from "../Pages/Reservation/ReservationCreate";
 import SignUp from "../Pages/SignUp/SignUp";
+import PrivateRoutes from "./PrivateRoutes";
 
 export const router = createBrowserRouter([
   {
@@ -37,7 +39,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/reservation",
-        element: <Reservation />,
+        element: <ReservationCreate />,
       },
       {
         path: "/order",
@@ -56,9 +58,9 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: (
-      // <PrivateRoutes>
-      <DashBoardLayout />
-      // </PrivateRoutes>
+      <PrivateRoutes>
+        <DashBoardLayout />
+      </PrivateRoutes>
     ),
     children: [
       {
@@ -76,6 +78,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/allUsers",
         element: <AllUsers />,
+      },
+      {
+        path: "/dashboard/allOrders",
+        element: <AdminOrders />,
       },
       {
         path: "/dashboard/cart",
