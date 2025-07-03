@@ -11,21 +11,36 @@ import {
   MapPin,
   Menu,
   Settings,
+  Shield,
   ShoppingCart,
   Table,
   User,
-  UserCheck,
+  Users,
 } from "lucide-react";
 import { useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../Provider/AuthProvider";
+import useAdmin from "../../../hooks/useAdmin";
+import useSuperAdmin from "../../../hooks/useSuperAdmin";
 
 const DashBoardSidebar = () => {
   const navigate = useNavigate();
   const { user, logOut } = useContext(AuthContext);
 
-  // 🔁 Temporary hardcoded admin status — update this later
-  const isAdmin = true;
+  // Get actual admin status from hooks
+  const [isAdmin, isAdminLoading] = useAdmin();
+  const [isSuperAdmin, isSuperAdminLoading] = useSuperAdmin();
+
+  // Show loading if still checking permissions
+  if (isAdminLoading || isSuperAdminLoading) {
+    return (
+      <div className="fixed left-0 top-0 h-screen w-64 flex flex-col bg-white shadow-lg z-50">
+        <div className="flex items-center justify-center h-full">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+        </div>
+      </div>
+    );
+  }
 
   // 🚪 Logout handler
   const handleLogout = () => {
@@ -46,11 +61,11 @@ const DashBoardSidebar = () => {
     },
   ];
 
-  // 🛠️ Admin-only menu
+  // 🛠️ Admin-only menu (both admin and super admin can see)
   const adminOnlyMenuItems = [
     {
       path: "/dashboard/allUsers",
-      icon: <UserCheck className="w-5 h-5" />,
+      icon: <Users className="w-5 h-5" />,
       label: "All Users",
     },
     {
@@ -60,7 +75,7 @@ const DashBoardSidebar = () => {
     },
     {
       path: "/dashboard/allOrders",
-      icon: <Calendar className="w-5 h-5" />,
+      icon: <ClipboardList className="w-5 h-5" />,
       label: "All Orders",
     },
     {
@@ -70,7 +85,21 @@ const DashBoardSidebar = () => {
     },
   ];
 
-  // 🧾 User menu
+  // 🔒 Super Admin only menu
+  const superAdminOnlyMenuItems = [
+    {
+      path: "/dashboard/adminManagement",
+      icon: <Shield className="w-5 h-5" />,
+      label: "Admin Management",
+    },
+    {
+      path: "/dashboard/systemSettings",
+      icon: <Settings className="w-5 h-5" />,
+      label: "System Settings",
+    },
+  ];
+
+  // 🧾 Regular user menu
   const userOnlyMenuItems = [
     {
       path: "/dashboard/profile",
@@ -90,7 +119,7 @@ const DashBoardSidebar = () => {
     {
       path: "/dashboard/reservations",
       icon: <Table className="w-5 h-5" />,
-      label: "Reservations ",
+      label: "Reservations",
     },
     {
       path: "/dashboard/favorites",
@@ -127,9 +156,29 @@ const DashBoardSidebar = () => {
   // 🔄 Combined visible items based on role
   const menuItems = [
     ...sharedMenuItems,
-    ...(isAdmin ? adminOnlyMenuItems : []),
+    // Super admins see everything
+    ...(isSuperAdmin
+      ? [...adminOnlyMenuItems, ...superAdminOnlyMenuItems]
+      : []),
+    // Regular admins see admin items but not super admin items
+    ...(isAdmin && !isSuperAdmin ? adminOnlyMenuItems : []),
+    // All users see user items (admins are also users)
     ...userOnlyMenuItems,
   ];
+
+  // Get role display text
+  const getRoleDisplay = () => {
+    if (isSuperAdmin) return "Super Admin";
+    if (isAdmin) return "Admin";
+    return "User";
+  };
+
+  // Get role badge color
+  const getRoleBadgeColor = () => {
+    if (isSuperAdmin) return "bg-purple-100 text-purple-800";
+    if (isAdmin) return "bg-blue-100 text-blue-800";
+    return "bg-gray-100 text-gray-800";
+  };
 
   return (
     <div className="fixed left-0 top-0 h-screen w-64 flex flex-col bg-white shadow-lg z-50">
@@ -180,6 +229,12 @@ const DashBoardSidebar = () => {
               {user?.displayName || "User"}
             </p>
             <p className="text-xs text-gray-500">{user?.email}</p>
+            {/* Role Badge */}
+            <span
+              className={`inline-block px-2 py-1 text-xs rounded-full mt-1 ${getRoleBadgeColor()}`}
+            >
+              {getRoleDisplay()}
+            </span>
           </div>
         </div>
 
