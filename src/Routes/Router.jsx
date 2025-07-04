@@ -1,13 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
 import DashBoardLayout from "../Layout/DashBoardLayout";
 import Main from "../Layout/Main";
+import Contact from "../Pages/Contact/Contact";
 import Addresses from "../Pages/DashBoard/Addresses";
 import AdminOrders from "../Pages/DashBoard/AdminOrders";
 import AllReservation from "../Pages/DashBoard/AllReservation";
+import AllReviews from "../Pages/DashBoard/AllReviews";
 import AllUsers from "../Pages/DashBoard/AllUsers";
 import Cart from "../Pages/DashBoard/Cart";
 import DashBoard from "../Pages/DashBoard/DashBoard";
-import Favorites from "../Pages/DashBoard/Favorites";
 import MenuForm from "../Pages/DashBoard/MenuForm";
 import Notifications from "../Pages/DashBoard/Notifications";
 import OrderHistory from "../Pages/DashBoard/OrderHistory";
@@ -16,14 +17,16 @@ import Reservations from "../Pages/DashBoard/Reservations";
 import Settings from "../Pages/DashBoard/Settings";
 import Support from "../Pages/DashBoard/Support";
 import UserProfile from "../Pages/DashBoard/UserProfile";
+import Favorites from "../Pages/Favorites/Favorites";
 import Home from "../Pages/Home/Home/Home";
 import Login from "../Pages/Login/Login";
 import Menu from "../Pages/Menu/Menu";
 import Order from "../Pages/Order/Order/Order";
 import ReservationCreate from "../Pages/Reservation/ReservationCreate";
+import Reviews from "../Pages/Reviews/Reviews";
 import SignUp from "../Pages/SignUp/SignUp";
+import UnderConstruction from "../Pages/UnderConstruction/UnderConstruction";
 import PrivateRoutes from "./PrivateRoutes";
-
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -38,6 +41,10 @@ export const router = createBrowserRouter([
         element: <Menu />,
       },
       {
+        path: "/favourites",
+        element: <Favorites />,
+      },
+      {
         path: "/reservation",
         element: <ReservationCreate />,
       },
@@ -46,12 +53,21 @@ export const router = createBrowserRouter([
         element: <Order />,
       },
       {
+        path: "/contact",
+        element: <Contact />,
+      },
+      {
         path: "/signUp",
         element: <SignUp />,
       },
       {
         path: "/login",
         element: <Login />,
+      },
+
+      {
+        path: "/reviews",
+        element: <Reviews />,
       },
     ],
   },
@@ -96,6 +112,10 @@ export const router = createBrowserRouter([
         element: <MenuForm />,
       },
       {
+        path: "/dashboard/allReviews",
+        element: <AllReviews />,
+      },
+      {
         path: "/dashboard/reservations",
         element: <Reservations />,
       },
@@ -125,4 +145,5 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  { path: "*", element: <UnderConstruction /> },
 ]);

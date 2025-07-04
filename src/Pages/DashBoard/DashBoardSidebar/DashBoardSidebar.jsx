@@ -8,7 +8,6 @@ import {
   HelpCircle,
   Home,
   LogOut,
-  MapPin,
   Menu,
   Settings,
   Shield,
@@ -18,6 +17,7 @@ import {
   Users,
 } from "lucide-react";
 import { useContext } from "react";
+import { MdReviews } from "react-icons/md";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAdmin from "../../../hooks/useAdmin";
@@ -67,6 +67,11 @@ const DashBoardSidebar = () => {
       path: "/dashboard/allUsers",
       icon: <Users className="w-5 h-5" />,
       label: "All Users",
+    },
+    {
+      path: "/dashboard/allReviews",
+      icon: <MdReviews className="w-5 h-5" />,
+      label: "All Reviews",
     },
     {
       path: "/dashboard/allReservations",
@@ -126,11 +131,7 @@ const DashBoardSidebar = () => {
       icon: <Heart className="w-5 h-5" />,
       label: "Favorites",
     },
-    {
-      path: "/dashboard/addresses",
-      icon: <MapPin className="w-5 h-5" />,
-      label: "Addresses",
-    },
+
     {
       path: "/dashboard/payment-methods",
       icon: <CreditCard className="w-5 h-5" />,

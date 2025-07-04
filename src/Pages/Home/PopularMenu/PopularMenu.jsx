@@ -1,35 +1,37 @@
-import SectionTitle from '../../../Component/SectionTitle/SectionTitle';
-import MenuItem from '../../Shared/MenuItem/MenuItem';
-import useMenu from '../../../hooks/useMenu';
+import SectionTitle from "../../../Component/SectionTitle/SectionTitle";
+import useMenu from "../../../hooks/useMenu";
+import MenuItem from "../../Shared/MenuItem/MenuItem";
 
-const PopularMenu = () => {
-    const [menu,loading]=useMenu()
-    if(loading){
-      return <p className="text-center text-gray-500">Loading...</p>; // Show a loader while fetching
-    }
-    const popularItems = menu.filter(item => item.category === "popular");
+const LatestMenu = () => {
+  const [menu, loading] = useMenu();
+
+  if (loading) {
+    return <p className="text-center text-gray-500">Loading...</p>;
+  }
+
+  // Get latest 6 items based on createdAt
+  const latestItems = [...menu]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 6);
+
   return (
     <div>
       <SectionTitle
-        heading={"Our Popular Menu"}
-        subHeading={"Explore our selection of the most popular dishes!"}
+        heading="Latest Menu Items"
+        subHeading="Check out our newest dishes!"
       />
 
-      <div className=' max-w-screen-xl mx-4 lg:mx-auto grid lg:grid-cols-3 gap-4'>{
-
-popularItems.length>0 ?(
-  popularItems.map(item=><MenuItem
-  key={item._id}
-  item={item}
-  ></MenuItem>)
-):( <p className="text-center text-gray-500 col-span-3">No popular items available.</p>
-)
-
-
-
-}</div>
+      <div className="max-w-screen-xl mx-4 lg:mx-auto grid lg:grid-cols-3 gap-4">
+        {latestItems.length > 0 ? (
+          latestItems.map((item) => <MenuItem key={item._id} item={item} />)
+        ) : (
+          <p className="text-center text-gray-500 col-span-3">
+            No latest items available.
+          </p>
+        )}
+      </div>
     </div>
   );
 };
 
-export default PopularMenu;
+export default LatestMenu;

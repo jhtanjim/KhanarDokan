@@ -29,4 +29,10 @@ export const navBarMenu=[
         title:"Our Shop",
         link:"/order"
     },
+
+    {
+        id:7,
+        title:"Add Reviews",
+        link:"/reviews"
+    },
 ]

@@ -9,13 +9,16 @@ const useReservation = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:5000/reservations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reservationData),
-      });
+      const response = await fetch(
+        "https://khanar-dokan-server.vercel.app/reservations",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reservationData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to create reservation");
@@ -36,7 +39,7 @@ const useReservation = () => {
     setError(null);
     try {
       const response = await fetch(
-        `http://localhost:5000/reservations?email=${email}`
+        `https://khanar-dokan-server.vercel.app/reservations?email=${email}`
       );
 
       if (!response.ok) {
@@ -58,7 +61,7 @@ const useReservation = () => {
     setError(null);
     try {
       const response = await fetch(
-        `http://localhost:5000/reservations/${id}/cancel`,
+        `https://khanar-dokan-server.vercel.app/reservations/${id}/cancel`,
         {
           method: "PATCH",
           headers: {
@@ -93,7 +96,7 @@ const useReservation = () => {
 
       const token = localStorage.getItem("access-token");
       const response = await fetch(
-        `http://localhost:5000/admin/reservations?${params}`,
+        `https://khanar-dokan-server.vercel.app/admin/reservations?${params}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -121,7 +124,7 @@ const useReservation = () => {
     try {
       const token = localStorage.getItem("access-token");
       const response = await fetch(
-        `http://localhost:5000/admin/reservations/${id}/status`,
+        `https://khanar-dokan-server.vercel.app/admin/reservations/${id}/status`,
         {
           method: "PATCH",
           headers: {
@@ -152,7 +155,7 @@ const useReservation = () => {
     try {
       const token = localStorage.getItem("access-token");
       const response = await fetch(
-        `http://localhost:5000/admin/reservations/${id}`,
+        `https://khanar-dokan-server.vercel.app/admin/reservations/${id}`,
         {
           method: "DELETE",
           headers: {

@@ -1,9 +1,9 @@
-import axios from 'axios';
- const axiosPublic=axios.create({
-    baseURL:"http://localhost:5000/"
-})
+import axios from "axios";
+const axiosPublic = axios.create({
+  baseURL: "https://khanar-dokan-server.vercel.app/",
+});
 const useAxiosPublic = () => {
-    return axiosPublic 
+  return axiosPublic;
 };
 
 export default useAxiosPublic;

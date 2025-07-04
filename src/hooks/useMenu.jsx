@@ -1,17 +1,25 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
+import useAxios from "./useAxios";
 
-const useMenu = () => { 
-const [menu,setMenu]=useState([])
-const [loading,setLoading]=useState(true)
-useEffect(()=>{
-    fetch("/MocData/menu.json")
-    .then(res=>res.json())
-    .then(data=>{setMenu(data)
-        setLoading(false)
-    })
-},[])
+const useMenu = () => {
+  const [menu, setMenu] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const axiosSecure = useAxios();
 
-  return [menu,loading]
-}
+  useEffect(() => {
+    axiosSecure
+      .get("/menu")
+      .then((res) => {
+        setMenu(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching menu:", err);
+        setLoading(false);
+      });
+  }, [axiosSecure]);
 
-export default useMenu
+  return [menu, loading];
+};
+
+export default useMenu;

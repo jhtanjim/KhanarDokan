@@ -68,7 +68,7 @@ const useMutation = (fn) => {
 // Custom hook for menu operations
 const useMenu = () => {
   const fetchMenuItems = async () => {
-    const response = await fetch("http://localhost:5000/menu");
+    const response = await fetch("https://khanar-dokan-server.vercel.app/menu");
     if (!response.ok) throw new Error("Failed to fetch menu items");
     return response.json();
   };
@@ -82,46 +82,55 @@ const useMenu = () => {
 
   const addMenuItem = async (menuItem) => {
     const token = localStorage.getItem("access-token");
-    const response = await fetch("http://localhost:5000/menu", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        ...menuItem,
-        price: parseFloat(menuItem.price),
-      }),
-    });
+    const response = await fetch(
+      "https://khanar-dokan-server.vercel.app/menu",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ...menuItem,
+          price: parseFloat(menuItem.price),
+        }),
+      }
+    );
     if (!response.ok) throw new Error("Failed to add menu item");
     return response.json();
   };
 
   const updateMenuItem = async ({ id, ...menuItem }) => {
     const token = localStorage.getItem("access-token");
-    const response = await fetch(`http://localhost:5000/menu/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        ...menuItem,
-        price: parseFloat(menuItem.price),
-      }),
-    });
+    const response = await fetch(
+      `https://khanar-dokan-server.vercel.app/menu/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ...menuItem,
+          price: parseFloat(menuItem.price),
+        }),
+      }
+    );
     if (!response.ok) throw new Error("Failed to update menu item");
     return response.json();
   };
 
   const deleteMenuItem = async (id) => {
     const token = localStorage.getItem("access-token");
-    const response = await fetch(`http://localhost:5000/menu/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await fetch(
+      `https://khanar-dokan-server.vercel.app/menu/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     if (!response.ok) throw new Error("Failed to delete menu item");
     return response.json();
   };
@@ -177,6 +186,7 @@ const MenuForm = () => {
     { value: "snack", label: "Snack", icon: "🍿" },
     { value: "salad", label: "Salad", icon: "🥙" },
     { value: "soup", label: "Soup", icon: "🍲" },
+    { value: "pizza", label: "pizza", icon: "🍲" },
   ];
 
   // Fixed image upload function
@@ -186,8 +196,9 @@ const MenuForm = () => {
 
     try {
       setImageUploading(true);
+      const IMGBB_API_KEY = "2b34080be6cb839aa4c97f7699afb63a";
+
       // You need to replace this with your actual ImageBB API key
-      const IMGBB_API_KEY = "your-imgbb-api-key-here";
       const response = await fetch(
         `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
         {
