@@ -1,4 +1,12 @@
-import { Calendar, Edit, Eye, Package, TrendingUp, Users } from "lucide-react";
+import {
+  Calendar,
+  Edit,
+  Eye,
+  Package,
+  Trash2,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useAxios from "../../hooks/useAxios";
@@ -77,6 +85,43 @@ const AdminOrders = () => {
     } catch (error) {
       console.error("Error updating order status:", error);
       Swal.fire("Error!", "Failed to update order status.", "error");
+    }
+  };
+
+  const deleteOrder = async (orderId) => {
+    try {
+      const result = await Swal.fire({
+        title: "Delete Order",
+        text: "Are you sure you want to delete this order? This action cannot be undone!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc2626",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        await axiosSecure.delete(`/admin/orders/${orderId}`);
+
+        // Close modal if the deleted order was being viewed
+        if (selectedOrder && selectedOrder._id === orderId) {
+          setSelectedOrder(null);
+        }
+
+        fetchOrders(); // Refresh the orders list
+
+        Swal.fire({
+          title: "Deleted!",
+          text: "Order has been deleted successfully.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      Swal.fire("Error!", "Failed to delete order.", "error");
     }
   };
 
@@ -297,12 +342,16 @@ const AdminOrders = () => {
                         <div className="flex space-x-2">
                           <button
                             onClick={() => setSelectedOrder(order)}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-blue-600 hover:text-blue-900 p-1 hover:bg-blue-50 rounded"
+                            title="View Details"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
                           <div className="relative group">
-                            <button className="text-green-600 hover:text-green-900">
+                            <button
+                              className="text-green-600 hover:text-green-900 p-1 hover:bg-green-50 rounded"
+                              title="Edit Status"
+                            >
                               <Edit className="w-4 h-4" />
                             </button>
                             <div className="absolute right-0 top-6 w-32 bg-white border border-gray-200 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
@@ -340,6 +389,13 @@ const AdminOrders = () => {
                               </button>
                             </div>
                           </div>
+                          <button
+                            onClick={() => deleteOrder(order._id)}
+                            className="text-red-600 hover:text-red-900 p-1 hover:bg-red-50 rounded"
+                            title="Delete Order"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -460,25 +516,35 @@ const AdminOrders = () => {
                 </div>
               </div>
 
-              <div className="mt-6 flex justify-end space-x-3">
-                <select
-                  onChange={(e) =>
-                    updateOrderStatus(selectedOrder._id, e.target.value)
-                  }
-                  defaultValue={selectedOrder.deliveryStatus}
-                  className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="processing">Processing</option>
-                  <option value="delivered">Delivered</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
+              <div className="mt-6 flex justify-between items-center">
                 <button
-                  onClick={() => setSelectedOrder(null)}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                  onClick={() => deleteOrder(selectedOrder._id)}
+                  className="flex items-center px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
                 >
-                  Close
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete Order
                 </button>
+
+                <div className="flex space-x-3">
+                  <select
+                    onChange={(e) =>
+                      updateOrderStatus(selectedOrder._id, e.target.value)
+                    }
+                    defaultValue={selectedOrder.deliveryStatus}
+                    className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
+                  <button
+                    onClick={() => setSelectedOrder(null)}
+                    className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>

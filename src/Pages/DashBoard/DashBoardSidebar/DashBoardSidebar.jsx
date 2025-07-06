@@ -1,9 +1,7 @@
 import {
-  Bell,
   BookOpen,
   Calendar,
   ClipboardList,
-  CreditCard,
   Heart,
   HelpCircle,
   Home,
@@ -22,11 +20,10 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAdmin from "../../../hooks/useAdmin";
 import useSuperAdmin from "../../../hooks/useSuperAdmin";
-
 const DashBoardSidebar = () => {
   const navigate = useNavigate();
   const { user, logOut } = useContext(AuthContext);
-
+  console.log(user);
   // Get actual admin status from hooks
   const [isAdmin, isAdminLoading] = useAdmin();
   const [isSuperAdmin, isSuperAdminLoading] = useSuperAdmin();
@@ -88,6 +85,11 @@ const DashBoardSidebar = () => {
       icon: <Menu className="w-5 h-5" />,
       label: "Add Menu",
     },
+    {
+      path: "/dashboard/supportList",
+      icon: <HelpCircle className="w-5 h-5" />,
+      label: "Support List",
+    },
   ];
 
   // 🔒 Super Admin only menu
@@ -132,21 +134,21 @@ const DashBoardSidebar = () => {
       label: "Favorites",
     },
 
-    {
-      path: "/dashboard/payment-methods",
-      icon: <CreditCard className="w-5 h-5" />,
-      label: "Payment Methods",
-    },
-    {
-      path: "/dashboard/notifications",
-      icon: <Bell className="w-5 h-5" />,
-      label: "Notifications",
-    },
-    {
-      path: "/dashboard/settings",
-      icon: <Settings className="w-5 h-5" />,
-      label: "Settings",
-    },
+    // {
+    //   path: "/dashboard/payment-methods",
+    //   icon: <CreditCard className="w-5 h-5" />,
+    //   label: "Payment Methods",
+    // },
+    // {
+    //   path: "/dashboard/notifications",
+    //   icon: <Bell className="w-5 h-5" />,
+    //   label: "Notifications",
+    // },
+    // {
+    //   path: "/dashboard/settings",
+    //   icon: <Settings className="w-5 h-5" />,
+    //   label: "Settings",
+    // },
     {
       path: "/dashboard/support",
       icon: <HelpCircle className="w-5 h-5" />,

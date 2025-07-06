@@ -79,7 +79,7 @@ const useMenu = () => {
     error,
     refetch,
   } = useQuery(["menuItems"], fetchMenuItems);
-
+  console.log(menuItems);
   const addMenuItem = async (menuItem) => {
     const token = localStorage.getItem("access-token");
     const response = await fetch(

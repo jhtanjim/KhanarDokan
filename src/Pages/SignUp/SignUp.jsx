@@ -42,7 +42,7 @@ export default function SignUp() {
 
       // Send user info to backend
       const userInfo = {
-        fullaName,
+        name,
         email,
         phone,
         photoURL,

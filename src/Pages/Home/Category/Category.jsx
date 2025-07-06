@@ -1,10 +1,9 @@
-import React from 'react';
-import SectionTitle from '../../../Component/SectionTitle/SectionTitle';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Navigation, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import SectionTitle from "../../../Component/SectionTitle/SectionTitle";
 
 import img1 from "../../../assets/home/slide1.jpg";
 import img2 from "../../../assets/home/slide2.jpg";
@@ -17,7 +16,7 @@ const images = [
   { src: img2, title: "Soups" },
   { src: img3, title: "Pizzas" },
   { src: img4, title: "Dessert" },
-  { src: img5, title: "Category 5" },
+  { src: img5, title: "Snack" },
 ];
 
 const CategoryCard = ({ img }) => (
@@ -27,7 +26,9 @@ const CategoryCard = ({ img }) => (
       src={img.src}
       alt={img.title}
     />
-    <p className="mt-2 text-center text-lg font-semibold text-primary">{img.title}</p>
+    <p className="mt-2 text-center text-lg font-semibold text-primary">
+      {img.title}
+    </p>
   </div>
 );
 
@@ -36,9 +37,11 @@ const Category = () => {
     <div className="my-12">
       <SectionTitle
         heading={"Explore our menu"}
-        subheading={"Explore our menu Choose from a diverse menu featuring a delectable array of dishes. Our mission cravings and elevate your dining experience one delicious meal at a time"}
+        subheading={
+          "Explore our menu Choose from a diverse menu featuring a delectable array of dishes. Our mission cravings and elevate your dining experience one delicious meal at a time"
+        }
       />
-      
+
       {/* Mobile View - with Swiper */}
       <div className="mt-8 px-4 md:px-8 lg:hidden">
         <Swiper
@@ -57,7 +60,7 @@ const Category = () => {
             },
             768: {
               slidesPerView: 3,
-            }
+            },
           }}
           className="mySwiper"
         >
@@ -68,7 +71,7 @@ const Category = () => {
           ))}
         </Swiper>
       </div>
-      
+
       {/* Desktop View - Regular Grid */}
       <div className="hidden lg:flex justify-center gap-12 mt-8 px-4 md:px-8">
         {images.map((img, index) => (

@@ -7,7 +7,7 @@ export const navBarMenu=[
     {
         id:2,
         title:"Contact Us",
-        link:"/contactUs"
+        link:"/contact"
     },
     {
         id:3,

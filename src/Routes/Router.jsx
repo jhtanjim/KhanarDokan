@@ -16,6 +16,7 @@ import PaymentMethods from "../Pages/DashBoard/PaymentMethods";
 import Reservations from "../Pages/DashBoard/Reservations";
 import Settings from "../Pages/DashBoard/Settings";
 import Support from "../Pages/DashBoard/Support";
+import SupportList from "../Pages/DashBoard/SupportList";
 import UserProfile from "../Pages/DashBoard/UserProfile";
 import Favorites from "../Pages/Favorites/Favorites";
 import Home from "../Pages/Home/Home/Home";
@@ -142,6 +143,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/support",
         element: <Support />,
+      },
+      {
+        path: "/dashboard/supportList",
+        element: <SupportList />,
       },
     ],
   },

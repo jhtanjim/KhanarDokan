@@ -21,7 +21,7 @@ const AllUsers = () => {
   const [isSuperAdmin] = useSuperAdmin();
   const [isAdmin] = useAdmin();
   const axiosSecure = useAxios();
-
+  console.log(users);
   const handleMakeAdmin = async (user) => {
     Swal.fire({
       title: "Are you sure?",
