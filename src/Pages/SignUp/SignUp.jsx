@@ -1,5 +1,5 @@
 import { ChefHat, Lock, Mail, Phone, User } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
@@ -11,8 +11,14 @@ export default function SignUp() {
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
 
+  // Add this state at the top of your component (after other useContext/hooks)
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Update your handleSignup function to include loading state
   const handleSignup = async (event) => {
     event.preventDefault();
+    setIsLoading(true); // Start loading
+
     const form = event.target;
     const name = form.name.value;
     const email = form.email.value;
@@ -23,40 +29,27 @@ export default function SignUp() {
     const photo = form.photo.files[0];
 
     if (!acceptedTerms) {
+      setIsLoading(false); // Stop loading
       Swal.fire("Oops!", "Please accept the terms and conditions.", "warning");
       return;
     }
 
     if (password !== confirmPassword) {
+      setIsLoading(false); // Stop loading
       Swal.fire("Mismatch!", "Passwords do not match.", "error");
       return;
     }
 
     try {
-      const userCredential = await createUser(email, password);
-      const user = userCredential.user;
+      // Your existing code here...
 
-      const photoURL = photo ? URL.createObjectURL(photo) : "";
+      // At the end of successful signup:
+      setIsLoading(false); // Stop loading
 
-      await updateUserProfile(name, photoURL);
-
-      // Send user info to backend
-      const userInfo = {
-        name,
-        email,
-        phone,
-        photoURL,
-        role: "user", // or any default role
-        createdAt: new Date(),
-      };
-
-      await axiosPublic.post("/users", userInfo);
-
-      form.reset();
-
+      // Show success message and redirect
       Swal.fire({
         title: "Account Created!",
-        text: "Welcome to Flavor Haven 🎉",
+        text: "Welcome to khanar dokan 🎉 please log in!",
         icon: "success",
         confirmButtonText: "Go to Home",
         confirmButtonColor: "#D97706",
@@ -64,42 +57,120 @@ export default function SignUp() {
         navigate("/");
       });
     } catch (error) {
-      console.error("Error creating user:", error.message);
-      Swal.fire("Error!", error.message, "error");
+      setIsLoading(false); // Stop loading on error
+
+      // Your existing error handling code...
     }
   };
 
+  // Update your button JSX to:
+  <button
+    type="submit"
+    disabled={isLoading}
+    className={`w-full py-2 px-4 rounded-md font-medium transition duration-150 ease-in-out ${
+      isLoading
+        ? "bg-amber-400 cursor-not-allowed"
+        : "bg-amber-600 hover:bg-amber-700"
+    } text-white`}
+  >
+    {isLoading ? "Creating Account..." : "Create Account"}
+  </button>;
   const handleGoogleSignUp = async () => {
     try {
       const result = await signInWithGoogle();
       const user = result.user;
 
-      // Send user info to backend
-      const userInfo = {
-        name: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        role: "user",
-        createdAt: new Date(),
-      };
+      // Validate user email before sending to backend
+      if (user?.email && user.email.includes("@")) {
+        // Send user info to backend if it's a new user
+        const userInfo = {
+          name: user?.displayName || "Google User",
+          email: user?.email,
+          photoURL: user?.photoURL || "",
+          role: "user",
+          createdAt: new Date(),
+        };
 
-      await axiosPublic.post("/users", userInfo);
+        try {
+          await axiosPublic.post("/users", userInfo);
+        } catch (backendError) {
+          console.error("Backend user creation failed:", backendError);
+          // Don't block the login process if backend fails
+        }
+      }
 
       Swal.fire({
-        title: "Account Created!",
-        text: "Welcome to Flavor Haven 🎉",
+        title: "Login Successful!",
+        text: "Welcome to Flavor Haven 🍽️",
         icon: "success",
-        confirmButtonText: "Go to Home",
+        confirmButtonText: "Continue",
         confirmButtonColor: "#D97706",
       }).then(() => {
         navigate("/");
       });
     } catch (error) {
-      console.error("Error creating user:", error.message);
-      Swal.fire("Error!", error.message, "error");
+      console.error("Google sign-in error:", error);
+
+      // Filter out specific error messages
+      let errorMessage = error.message;
+      if (error.code === "auth/invalid-email") {
+        errorMessage =
+          "There was an issue with the email address. Please try again.";
+      } else if (error.code === "auth/popup-closed-by-user") {
+        errorMessage = "Sign-in was cancelled. Please try again.";
+      }
+
+      Swal.fire("Login Failed", errorMessage, "error");
     }
   };
+  // const handleGoogleSignUp = async () => {
+  //   try {
+  //     const result = await signInWithGoogle();
+  //     const user = result.user;
 
+  //     // Validate user email before sending to backend
+  //     if (user?.email && user.email.includes("@")) {
+  //       // Send user info to backend
+  //       const userInfo = {
+  //         name: user?.displayName || "Google User",
+  //         email: user?.email,
+  //         photoURL: user?.photoURL || "",
+  //         role: "user",
+  //         createdAt: new Date(),
+  //       };
+
+  //       try {
+  //         await axiosPublic.post("/users", userInfo);
+  //       } catch (backendError) {
+  //         console.error("Backend user creation failed:", backendError);
+  //         // Don't block the signup process if backend fails
+  //       }
+  //     }
+
+  //     Swal.fire({
+  //       title: "Account Created!",
+  //       text: "Welcome to Flavor Haven 🎉",
+  //       icon: "success",
+  //       confirmButtonText: "Go to Home",
+  //       confirmButtonColor: "#D97706",
+  //     }).then(() => {
+  //       navigate("/");
+  //     });
+  //   } catch (error) {
+  //     console.error("Google sign-up error:", error);
+
+  //     // Filter out specific error messages
+  //     let errorMessage = error.message;
+  //     if (error.code === "auth/invalid-email") {
+  //       errorMessage =
+  //         "There was an issue with the email address. Please try again.";
+  //     } else if (error.code === "auth/popup-closed-by-user") {
+  //       errorMessage = "Sign-up was cancelled. Please try again.";
+  //     }
+
+  //     Swal.fire("Error!", errorMessage, "error");
+  //   }
+  // };
   return (
     <div className="min-h-screen bg-amber-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">

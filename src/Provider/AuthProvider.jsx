@@ -53,15 +53,26 @@ const AuthProvider = ({ children }) => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
-        // Get JWT token
+        // Get JWT token with error handling
         const userInfo = { email: currentUser.email };
-        axios
-          .post("https://khanar-dokan-server.vercel.app/jwt", userInfo)
-          .then((res) => {
-            if (res.data.token) {
-              localStorage.setItem("access-token", res.data.token);
-            }
-          });
+
+        // Validate email before sending
+        if (currentUser.email && currentUser.email.includes("@")) {
+          axios
+            .post("https://khanar-dokan-server.vercel.app/jwt", userInfo)
+            .then((res) => {
+              if (res.data.token) {
+                localStorage.setItem("access-token", res.data.token);
+              }
+            })
+            .catch((error) => {
+              console.error("JWT token generation failed:", error);
+              // Don't throw the error, just log it
+              // The user is still authenticated even if JWT fails
+            });
+        } else {
+          console.error("Invalid email format:", currentUser.email);
+        }
       } else {
         // Remove token when user signs out
         localStorage.removeItem("access-token");
