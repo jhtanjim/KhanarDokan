@@ -24,7 +24,7 @@ export default function Login() {
         // ✅ Show success modal
         Swal.fire({
           title: "Login Successful!",
-          text: "Welcome back to Flavor Haven 🍽️",
+          text: "Welcome back to Khanar Dokan 🍽️",
           icon: "success",
           confirmButtonText: "Continue",
           confirmButtonColor: "#D97706", // amber-600
@@ -64,7 +64,7 @@ export default function Login() {
 
       Swal.fire({
         title: "Login Successful!",
-        text: "Welcome to Flavor Haven 🍽️",
+        text: "Welcome to Khanar Dokan 🍽️",
         icon: "success",
         confirmButtonText: "Continue",
         confirmButtonColor: "#D97706",
@@ -95,7 +95,7 @@ export default function Login() {
           <div className="inline-flex items-center justify-center p-2 bg-amber-600 text-white rounded-full mb-4">
             <ChefHat size={32} />
           </div>
-          <h1 className="text-3xl font-bold text-amber-900">Flavor Haven</h1>
+          <h1 className="text-3xl font-bold text-amber-900">Khanar Dokan</h1>
           <p className="text-amber-700 mt-2">Welcome back, food lover</p>
         </div>
 

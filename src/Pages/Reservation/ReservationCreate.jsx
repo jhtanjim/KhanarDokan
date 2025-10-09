@@ -15,7 +15,7 @@ import useReservation from "../../hooks/useReservation";
 // Reservation Create Component
 const ReservationCreate = () => {
   const { user } = useAuth();
-
+  console.log("Authenticated user:", user);
   const [formData, setFormData] = useState({
     customerName: "",
     email: "",

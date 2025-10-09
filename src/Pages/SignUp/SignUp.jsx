@@ -106,7 +106,7 @@ export default function SignUp() {
       // Show success message and redirect
       Swal.fire({
         title: "Account Created!",
-        text: "Welcome to Flavor Haven 🎉",
+        text: "Welcome to Khanar Dokan 🎉",
         icon: "success",
         confirmButtonText: "Go to Home",
         confirmButtonColor: "#D97706",
@@ -167,7 +167,7 @@ export default function SignUp() {
 
       Swal.fire({
         title: "Account Created!",
-        text: "Welcome to Flavor Haven 🎉",
+        text: "Welcome to Khanar Dokan 🎉",
         icon: "success",
         confirmButtonText: "Go to Home",
         confirmButtonColor: "#D97706",
@@ -197,7 +197,7 @@ export default function SignUp() {
           <div className="inline-flex items-center justify-center p-2 bg-amber-600 text-white rounded-full mb-4">
             <ChefHat size={32} />
           </div>
-          <h1 className="text-3xl font-bold text-amber-900">Flavor Haven</h1>
+          <h1 className="text-3xl font-bold text-amber-900">Khanar Dokan</h1>
           <p className="text-amber-700 mt-2">Join our culinary community</p>
         </div>
 
