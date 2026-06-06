@@ -1,5 +1,5 @@
-import { ChefHat, Lock, Mail } from "lucide-react";
-import { useContext } from "react";
+import { ChefHat, Lock, Mail, ShieldCheck } from "lucide-react";
+import { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
@@ -9,6 +9,14 @@ export default function Login() {
   const { signIn, signInWithGoogle } = useContext(AuthContext);
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
+
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  const handleDemoLogin = () => {
+    if (emailRef.current) emailRef.current.value = "admin@gmail.com";
+    if (passwordRef.current) passwordRef.current.value = "ASdf12@#";
+  };
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -20,16 +28,14 @@ export default function Login() {
       .then((result) => {
         const user = result.user;
         console.log(user);
-
-        // ✅ Show success modal
         Swal.fire({
           title: "Login Successful!",
           text: "Welcome back to Khanar Dokan 🍽️",
           icon: "success",
           confirmButtonText: "Continue",
-          confirmButtonColor: "#D97706", // amber-600
+          confirmButtonColor: "#D97706",
         }).then(() => {
-          navigate("/"); // Redirect to homepage
+          navigate("/");
         });
       })
       .catch((error) => {
@@ -43,9 +49,7 @@ export default function Login() {
       const result = await signInWithGoogle();
       const user = result.user;
 
-      // Validate user email before sending to backend
       if (user?.email && user.email.includes("@")) {
-        // Send user info to backend if it's a new user
         const userInfo = {
           name: user?.displayName || "Google User",
           email: user?.email,
@@ -53,12 +57,10 @@ export default function Login() {
           role: "user",
           createdAt: new Date(),
         };
-
         try {
           await axiosPublic.post("/users", userInfo);
         } catch (backendError) {
           console.error("Backend user creation failed:", backendError);
-          // Don't block the login process if backend fails
         }
       }
 
@@ -73,8 +75,6 @@ export default function Login() {
       });
     } catch (error) {
       console.error("Google sign-in error:", error);
-
-      // Filter out specific error messages
       let errorMessage = error.message;
       if (error.code === "auth/invalid-email") {
         errorMessage =
@@ -82,7 +82,6 @@ export default function Login() {
       } else if (error.code === "auth/popup-closed-by-user") {
         errorMessage = "Sign-in was cancelled. Please try again.";
       }
-
       Swal.fire("Login Failed", errorMessage, "error");
     }
   };
@@ -105,6 +104,16 @@ export default function Login() {
             <h2 className="text-2xl font-semibold text-amber-900 mb-6">
               Login
             </h2>
+
+            {/* Demo Admin Button */}
+            <button
+              type="button"
+              onClick={handleDemoLogin}
+              className="w-full mb-4 bg-amber-50 border border-amber-300 text-amber-800 py-2 px-4 rounded-md font-medium transition duration-150 ease-in-out hover:bg-amber-100 flex items-center justify-center gap-2"
+            >
+              <ShieldCheck size={18} className="text-amber-600" />
+              Use Demo Admin Credentials
+            </button>
 
             {/* Google Sign-In Button */}
             <button
@@ -159,6 +168,7 @@ export default function Login() {
                     id="email"
                     type="email"
                     name="email"
+                    ref={emailRef}
                     placeholder="your@email.com"
                     className="w-full pl-10 pr-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   />
@@ -180,6 +190,7 @@ export default function Login() {
                     id="password"
                     type="password"
                     name="password"
+                    ref={passwordRef}
                     className="w-full pl-10 pr-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                   />
                 </div>
@@ -229,8 +240,10 @@ export default function Login() {
           </div>
 
           {/* Decorative Footer */}
-          <div className="bg-amber-100 p-4 text-center text-amber-800">
-            <p className="text-sm font-medium">Taste the extraordinary</p>
+          <div className="bg-amber-100 p-4 text:center text-amber-800">
+            <p className="text-sm font-medium text-center">
+              Taste the extraordinary
+            </p>
           </div>
         </div>
       </div>
